@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:guidedlayout2_1748/View/login.dart';
-import 'package:guidedlayout2_1748/component/form_component.dart';
 
 class RegisterView extends StatefulWidget {
-  const RegisterView({super.key});
+  const RegisterView({Key? key}) : super(key: key);
 
   @override
   State<RegisterView> createState() => _RegisterViewState();
@@ -27,9 +26,8 @@ class _RegisterViewState extends State<RegisterView> {
         child: Center(
           child: SingleChildScrollView(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Header Text
+                // Header
                 const Text(
                   'Hey there,',
                   style: TextStyle(
@@ -42,23 +40,21 @@ class _RegisterViewState extends State<RegisterView> {
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black,
                   ),
                 ),
                 const SizedBox(height: 20),
 
-                // Form container with gradient background
+                // Form Container
                 Container(
                   width: 350,
                   padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 30),
-                  margin: const EdgeInsets.symmetric(horizontal: 20),
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
-                      colors: [Color(0xFFB0E0E6), Color(0xFFE0BBE4)], // Soft pastel gradient
+                      colors: [Color(0xFFB0E0E6), Color(0xFFE0BBE4)],
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                     ),
-                    borderRadius: BorderRadius.circular(25),
+                    borderRadius: BorderRadius.circular(30),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black12,
@@ -71,152 +67,99 @@ class _RegisterViewState extends State<RegisterView> {
                     key: _formKey,
                     child: Column(
                       children: [
-                        // Username
-                        inputForm(
-                          (p0) {
-                            if (p0 == null || p0.isEmpty) {
-                              return 'Username tidak boleh kosong';
-                            }
-                            return null;
-                          },
+                        // Username Input
+                        _buildInputField(
+                          hint: "User",
+                          icon: Icons.person,
                           controller: usernameController,
-                          hintTxt: "User",
-                          helperTxt: "",
-                          iconData: Icons.person,
-                        ),
-                        const SizedBox(height: 15),
-
-                        // Email
-                        inputForm(
-                          (p0) {
-                            if (p0 == null || p0.isEmpty) {
-                              return 'Email tidak boleh kosong';
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Username cannot be empty';
                             }
                             return null;
                           },
+                        ),
+                        const SizedBox(height: 15),
+
+                        // Email Input
+                        _buildInputField(
+                          hint: "Email",
+                          icon: Icons.email,
                           controller: emailController,
-                          hintTxt: "Email",
-                          helperTxt: "",
-                          iconData: Icons.email,
-                        ),
-                        const SizedBox(height: 15),
-
-                        // Password
-                        inputForm(
-                          (p0) {
-                            if (p0 == null || p0.isEmpty) {
-                              return 'Password tidak boleh kosong';
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Email cannot be empty';
                             }
                             return null;
                           },
+                        ),
+                        const SizedBox(height: 15),
+
+                        // Password Input
+                        _buildInputField(
+                          hint: "Password",
+                          icon: Icons.lock,
                           controller: passwordController,
-                          hintTxt: "Password",
-                          helperTxt: "",
-                          iconData: Icons.lock,
-                          password: true,
+                          isPassword: true,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Password cannot be empty';
+                            }
+                            return null;
+                          },
                         ),
                         const SizedBox(height: 15),
 
-                        // Weight with KG button
+                        // Weight Input with KG
                         Row(
                           children: [
                             Expanded(
-                              child: inputForm(
-                                (p0) {
-                                  if (p0 == null || p0.isEmpty) {
-                                    return 'Weight tidak boleh kosong';
-                                  }
-                                  return null;
-                                },
+                              child: _buildInputField(
+                                hint: "Your Weight",
+                                icon: Icons.monitor_weight,
                                 controller: weightController,
-                                hintTxt: "Your Weight",
-                                helperTxt: "",
-                                iconData: Icons.monitor_weight,
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            Container(
-                              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 15),
-                              decoration: BoxDecoration(
-                                color: Color(0xFFF06292),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: const Text(
-                                "KG",
-                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 15),
-
-                        // Height with CM button
-                        Row(
-                          children: [
-                            Expanded(
-                              child: inputForm(
-                                (p0) {
-                                  if (p0 == null || p0.isEmpty) {
-                                    return 'Height tidak boleh kosong';
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Weight cannot be empty';
                                   }
                                   return null;
                                 },
-                                controller: heightController,
-                                hintTxt: "Your Height",
-                                helperTxt: "",
-                                iconData: Icons.height,
                               ),
                             ),
                             const SizedBox(width: 10),
-                            Container(
-                              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 15),
-                              decoration: BoxDecoration(
-                                color: Color(0xFFBA68C8),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: const Text(
-                                "CM",
-                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                              ),
-                            ),
+                            _buildUnitBox("KG", const Color(0xFFF06292)),
                           ],
                         ),
                         const SizedBox(height: 15),
 
-                        // Gender Selection
-                        inputForm(
-                          (p0) => null,
-                          controller: TextEditingController(),
-                          hintTxt: "Choose Gender",
-                          helperTxt: "",
-                          iconData: Icons.transgender,
-                        ),
-                        const SizedBox(height: 12),
-
-                        // Gender Radio Buttons
+                        // Height Input with CM
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Radio<String>(
-                              value: 'Male',
-                              groupValue: _gender,
-                              onChanged: (String? value) {
-                                setState(() {
-                                  _gender = value!;
-                                });
-                              },
+                            Expanded(
+                              child: _buildInputField(
+                                hint: "Your Height",
+                                icon: Icons.height,
+                                controller: heightController,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Height cannot be empty';
+                                  }
+                                  return null;
+                                },
+                              ),
                             ),
-                            const Text('Male'),
-                            Radio<String>(
-                              value: 'Female',
-                              groupValue: _gender,
-                              onChanged: (String? value) {
-                                setState(() {
-                                  _gender = value!;
-                                });
-                              },
-                            ),
-                            const Text('Female'),
+                            const SizedBox(width: 10),
+                            _buildUnitBox("CM", const Color(0xFFBA68C8)),
+                          ],
+                        ),
+                        const SizedBox(height: 15),
+
+                        // Gender Selector
+                        Row(
+                          children: [
+                            _buildGenderRadio("Male"),
+                            const SizedBox(width: 10),
+                            _buildGenderRadio("Female"),
                           ],
                         ),
                         const SizedBox(height: 20),
@@ -225,7 +168,8 @@ class _RegisterViewState extends State<RegisterView> {
                         ElevatedButton(
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
-                              Map<String, dynamic> formData = {
+                              // Gather form data
+                              Map<String, String> formData = {
                                 'username': usernameController.text,
                                 'email': emailController.text,
                                 'password': passwordController.text,
@@ -233,27 +177,30 @@ class _RegisterViewState extends State<RegisterView> {
                                 'height': heightController.text,
                                 'gender': _gender,
                               };
+                              // TODO: Navigasi ke halaman
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (_) => LoginView(data: formData),
-                                ),
-                              );
+                                  builder: (_) =>  LoginView(data: formData),
+                                  ),
+                                  );
+                              // TODO: Handle registration logic
                             }
                           },
                           style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(horizontal: 100, vertical: 15),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 120, vertical: 15),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30),
                             ),
-                            backgroundColor: Color(0xFF6A5ACD),
-                            elevation: 8,
+                            backgroundColor: const Color(0xFF6A5ACD),
                           ),
                           child: const Text(
                             'Register',
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 14,
                               fontWeight: FontWeight.bold,
+                              color: Colors.white,
                             ),
                           ),
                         ),
@@ -263,34 +210,42 @@ class _RegisterViewState extends State<RegisterView> {
                 ),
                 const SizedBox(height: 25),
 
-                // Divider and Login link
+                // Or Divider
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
                     Expanded(child: Divider(color: Colors.grey)),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text("Or", style: TextStyle(color: Colors.grey)),
+                      child: Text(
+                        "Or",
+                        style: TextStyle(color: Colors.grey),
+                      ),
                     ),
                     Expanded(child: Divider(color: Colors.grey)),
                   ],
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 15),
 
+                // Login Link
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text("Already have an account?"),
+                    const Text("Already have an account? "),
                     TextButton(
                       onPressed: () {
+                        // TODO: Navigate to Login Page
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (_) => const LoginView()),
-                        );
+                          MaterialPageRoute(builder: (_) => LoginView()),
+                          );
                       },
                       child: const Text(
                         'Login',
-                        style: TextStyle(color: Color(0xFF8A2BE2)),
+                        style: TextStyle(
+                          color: Color(0xFF8A2BE2),
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ],
@@ -300,6 +255,66 @@ class _RegisterViewState extends State<RegisterView> {
           ),
         ),
       ),
+    );
+  }
+
+  // Helper for input fields
+  Widget _buildInputField({
+    required String hint,
+    required IconData icon,
+    required TextEditingController controller,
+    bool isPassword = false,
+    String? Function(String?)? validator,
+  }) {
+    return TextFormField(
+      controller: controller,
+      obscureText: isPassword,
+      validator: validator,
+      decoration: InputDecoration(
+        hintText: hint,
+        prefixIcon: Icon(icon),
+        filled: true,
+        fillColor: Colors.white,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+      ),
+    );
+  }
+
+  // Helper for unit boxes (KG, CM)
+  Widget _buildUnitBox(String text, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 15),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Text(
+        text,
+        style: const TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
+  // Helper for gender radio buttons
+  Widget _buildGenderRadio(String gender) {
+    return Row(
+      children: [
+        Radio<String>(
+          value: gender,
+          groupValue: _gender,
+          onChanged: (String? value) {
+            setState(() {
+              _gender = value!;
+            });
+          },
+        ),
+        Text(gender),
+      ],
     );
   }
 }

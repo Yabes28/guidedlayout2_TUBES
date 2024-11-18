@@ -13,36 +13,36 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
+  // Key untuk validasi form
   final _formKey = GlobalKey<FormState>();
 
-  // Controllers untuk field username dan password
+  // Controller untuk input data
   TextEditingController usernameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   Map<dynamic, dynamic>? dataForm;
 
   @override
   void initState() {
     super.initState();
+    // Data awal form jika ada (dikirim melalui parameter)
     dataForm = widget.data;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // Latar belakang utama berwarna putih
+      backgroundColor: Colors.white, // Background aplikasi
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Greeting text
+                // Header teks
                 const Text(
                   'Hey there,',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.black54,
-                  ),
+                  style: TextStyle(fontSize: 20, color: Colors.black54),
                 ),
                 const Text(
                   'Welcome Back',
@@ -52,25 +52,25 @@ class _LoginViewState extends State<LoginView> {
                     color: Colors.black87,
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 30),
 
-                // Container with gradient background
+                // Container input form
                 Container(
                   width: 350,
-                  padding: const EdgeInsets.all(20.0),
+                  padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
-                      colors: [Color(0xFFB0C4DE), Color(0xFF87CEFA)], // Gradasi warna
+                      colors: [Color(0xFFB0C4DE), Color(0xFF87CEFA)],
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                     ),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Form(
-                    key: _formKey,
+                    key: _formKey, // Menyimpan status form
                     child: Column(
                       children: [
-                        // Username input
+                        // Input username
                         inputForm(
                           (p0) {
                             if (p0 == null || p0.isEmpty) {
@@ -83,9 +83,7 @@ class _LoginViewState extends State<LoginView> {
                           helperTxt: "",
                           iconData: Icons.person,
                         ),
-                        const SizedBox(height: 12),
-
-                        // Email input
+                        // Input email
                         inputForm(
                           (p0) {
                             if (p0 == null || p0.isEmpty) {
@@ -93,14 +91,12 @@ class _LoginViewState extends State<LoginView> {
                             }
                             return null;
                           },
-                          controller: TextEditingController(),
+                          controller: emailController,
                           hintTxt: "Email",
                           helperTxt: "",
                           iconData: Icons.email,
                         ),
-                        const SizedBox(height: 12),
-
-                        // Password input
+                        // Input password
                         inputForm(
                           (p0) {
                             if (p0 == null || p0.isEmpty) {
@@ -114,13 +110,13 @@ class _LoginViewState extends State<LoginView> {
                           iconData: Icons.lock,
                           password: true,
                         ),
-                        const SizedBox(height: 12),
-
-                        // Forgot password link
-                        Center(
+                        // Link lupa password
+                        Align(
+                          alignment: Alignment.center,
                           child: TextButton(
                             onPressed: () {
-                              // Tindakan untuk lupa password
+                              // TODO: Tambahkan fungsi "Lupa Password"
+                              debugPrint("Forgot Password Clicked");
                             },
                             child: const Text(
                               'Forgot your password?',
@@ -138,10 +134,10 @@ class _LoginViewState extends State<LoginView> {
                 ),
                 const SizedBox(height: 20),
 
-                // Login button
+                // Tombol Login
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF87CEFA),
+                    backgroundColor: const Color(0xFF87CEFA),
                     padding: const EdgeInsets.symmetric(horizontal: 100, vertical: 15),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(50),
@@ -153,6 +149,7 @@ class _LoginViewState extends State<LoginView> {
                       if (dataForm != null &&
                           dataForm?['username'] == usernameController.text &&
                           dataForm?['password'] == passwordController.text) {
+                        // TODO: Navigasi ke halaman Home jika berhasil login
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -160,7 +157,7 @@ class _LoginViewState extends State<LoginView> {
                           ),
                         );
                       } else {
-                        // Menampilkan dialog jika login gagal
+                        // TODO: Tampilkan dialog jika login gagal
                         showDialog(
                           context: context,
                           builder: (_) => AlertDialog(
@@ -168,11 +165,7 @@ class _LoginViewState extends State<LoginView> {
                             content: const Text('Username atau password salah.'),
                             actions: <Widget>[
                               TextButton(
-                                onPressed: () => Navigator.pop(context, 'Cancel'),
-                                child: const Text('Cancel'),
-                              ),
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, 'OK'),
+                                onPressed: () => Navigator.pop(context),
                                 child: const Text('OK'),
                               ),
                             ],
@@ -192,43 +185,46 @@ class _LoginViewState extends State<LoginView> {
                 ),
                 const SizedBox(height: 20),
 
-                // Divider with "Or"
+                // Garis pembatas dengan teks "Or"
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Expanded(child: Divider(color: Colors.grey)),
-                    const Padding(
+                  children: const [
+                    Expanded(child: Divider(color: Colors.grey)),
+                    Padding(
                       padding: EdgeInsets.symmetric(horizontal: 8.0),
                       child: Text("Or", style: TextStyle(color: Colors.grey)),
                     ),
-                    const Expanded(child: Divider(color: Colors.grey)),
+                    Expanded(child: Divider(color: Colors.grey)),
                   ],
                 ),
                 const SizedBox(height: 10),
 
-                // Social login buttons
+                // Tombol media sosial
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     IconButton(
                       icon: const FaIcon(FontAwesomeIcons.google, color: Colors.red),
                       onPressed: () {
-                        // Fungsionalitas login Google
+                        // TODO: Tambahkan login Google
+                        debugPrint("Google Login Clicked");
                       },
                     ),
+                    const SizedBox(width: 20),
                     IconButton(
                       icon: const FaIcon(FontAwesomeIcons.facebook, color: Colors.blue),
                       onPressed: () {
-                        // Fungsionalitas login Facebook
+                        // TODO: Tambahkan login Facebook
+                        debugPrint("Facebook Login Clicked");
                       },
                     ),
                   ],
                 ),
                 const SizedBox(height: 20),
 
-                // Register link
+                // Link Register
                 TextButton(
                   onPressed: () {
+                    // TODO: Navigasi ke halaman Register
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (_) => const RegisterView()),
