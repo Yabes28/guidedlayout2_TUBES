@@ -105,37 +105,43 @@ class _WideLayoutState extends State<WideLayout> {
 }
 
 class PeopleList extends StatelessWidget {
+  // Callback function yang akan dipanggil ketika pengguna memilih seorang pelatih
   final void Function(Person) onPersonTap;
 
+  // Konstruktor untuk menerima callback function
   const PeopleList({super.key, required this.onPersonTap});
 
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
+      // Jumlah item dalam daftar sesuai jumlah orang dalam 'people'
       itemCount: people.length,
+      // Separator (jarak antar item) berupa SizedBox
       separatorBuilder: (context, index) => const SizedBox(height: 12),
+      // Builder untuk setiap item dalam daftar
       itemBuilder: (context, index) {
-        final person = people[index];
+        final person = people[index]; // Mendapatkan data pelatih berdasarkan index
         return Card(
+          // Membuat elemen ListTile menjadi berbentuk kotak dengan sudut melengkung
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),
-          elevation: 2,
+          elevation: 2, // Memberikan bayangan pada Card
           child: ListTile(
-            contentPadding: const EdgeInsets.all(12.0),
+            contentPadding: const EdgeInsets.all(12.0), // Jarak dalam konten
             leading: CircleAvatar(
-              radius: 30,
-              backgroundImage: NetworkImage(person.picture),
+              radius: 30, // Ukuran avatar
+              backgroundImage: NetworkImage(person.picture), // Gambar profil
             ),
             title: Text(
-              person.name,
+              person.name, // Nama pelatih
               style: const TextStyle(
                 fontWeight: FontWeight.w500,
                 fontSize: 16,
               ),
             ),
-            trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-            onTap: () => onPersonTap(person),
+            trailing: const Icon(Icons.arrow_forward_ios, size: 16), // Icon di sebelah kanan
+            onTap: () => onPersonTap(person), // Memanggil fungsi callback saat item ditekan
           ),
         );
       },
@@ -144,58 +150,60 @@ class PeopleList extends StatelessWidget {
 }
 
 class PersonDetail extends StatelessWidget {
+  // Objek pelatih yang akan ditampilkan detailnya
   final Person person;
 
+  // Konstruktor menerima objek pelatih
   const PersonDetail(this.person, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.white, // Latar belakang layar putih
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20), // Padding konten
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start, // Menyusun konten ke kiri
           children: [
-            // Profile Picture and Stats
+            // Bagian profil dan statistik
             Center(
               child: Column(
                 children: [
                   CircleAvatar(
-                    radius: 50,
-                    backgroundImage: NetworkImage(person.picture),
+                    radius: 50, // Ukuran avatar
+                    backgroundImage: NetworkImage(person.picture), // Gambar profil
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 16), // Spasi antara avatar dan nama
                   Text(
-                    person.name,
+                    person.name, // Nama pelatih
                     style: const TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 8), // Spasi
                   const Text(
-                    "Fitness and Nutrition Trainer • 15+ years of experience",
+                    "Fitness and Nutrition Trainer • 15+ years of experience", // Deskripsi pelatih
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.grey,
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 20), // Spasi
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Rata tengah
                     children: const [
-                      _StatCard(label: "Clients", value: "110"),
+                      _StatCard(label: "Clients", value: "110"), // Kartu statistik
                       _StatCard(label: "Sessions", value: "568"),
                     ],
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 30), // Spasi antar bagian
 
-            // Specializes In
+            // Bagian keahlian
             const Text(
               "Specializes in:",
               style: TextStyle(
@@ -203,19 +211,19 @@ class PersonDetail extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 12), // Spasi
             Wrap(
-              spacing: 10,
-              runSpacing: 10,
+              spacing: 10, // Jarak horizontal antar item
+              runSpacing: 10, // Jarak vertikal antar item
               children: const [
-                _SpecializationChip(label: "Fitness Training"),
+                _SpecializationChip(label: "Fitness Training"), // Chip keahlian
                 _SpecializationChip(label: "Muscle Building"),
                 _SpecializationChip(label: "Cardio"),
               ],
             ),
             const SizedBox(height: 30),
 
-            // Provides
+            // Bagian layanan yang ditawarkan
             const Text(
               "Provides:",
               style: TextStyle(
@@ -226,34 +234,34 @@ class PersonDetail extends StatelessWidget {
             const SizedBox(height: 12),
             const _ServiceRow(
               service: "Personal Training",
-              price: "starts @ Rs. 200/- per session",
+              price: "starts @ Rp. 200.000/- per session",
             ),
             const _ServiceRow(
               service: "Online Training",
-              price: "starts @ Rs. 200/- per session",
+              price: "starts @ Rp. 200.000/- per session",
             ),
             const _ServiceRow(
               service: "Small Group Training",
-              price: "starts @ Rs. 200/- per session",
+              price: "starts @ Rp. 200.000/- per session",
             ),
             const SizedBox(height: 30),
 
-            // Book Session Button
+            // Tombol booking sesi
             Center(
               child: ElevatedButton(
                 onPressed: () {
-                  // TODO: Handle Book Session Action
+                  // TODO: Tambahkan fungsi booking
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
+                  backgroundColor: Colors.blue, // Warna tombol
                   padding:
                       const EdgeInsets.symmetric(horizontal: 100, vertical: 15),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
+                    borderRadius: BorderRadius.circular(30), // Sudut melengkung tombol
                   ),
                 ),
                 child: const Text(
-                  "Book Session",
+                  "Book Session", // Teks tombol
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -269,9 +277,10 @@ class PersonDetail extends StatelessWidget {
   }
 }
 
+
 class _StatCard extends StatelessWidget {
-  final String label;
-  final String value;
+  final String label; // Label (misalnya: "Clients")
+  final String value; // Nilai (misalnya: "110")
 
   const _StatCard({required this.label, required this.value, Key? key})
       : super(key: key);
@@ -318,8 +327,8 @@ class _SpecializationChip extends StatelessWidget {
 }
 
 class _ServiceRow extends StatelessWidget {
-  final String service;
-  final String price;
+  final String service; // Nama layanan
+  final String price; // Harga layanan
 
   const _ServiceRow({required this.service, required this.price, Key? key})
       : super(key: key);
