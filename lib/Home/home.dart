@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:guidedlayout2_1748/View/profile.dart';
+import 'package:guidedlayout2_1748/Profile/profile.dart';
 import 'package:guidedlayout2_1748/View/view_list.dart';
 import 'dart:async';
 import 'package:guidedlayout2_1748/Home/alat1.dart';

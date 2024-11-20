@@ -34,9 +34,9 @@ class WelcomeView extends StatelessWidget {
                   children: [
                     // Custom Logo Image
                     Image.asset(
-                      'assets/logo.png', // Pastikan logo sudah ada di path ini
-                      width: 100,
-                      height: 100,
+                      'assets/imagesGYM.png', // Pastikan logo sudah ada di path ini
+                      width: 160,
+                      height: 115,
                       fit: BoxFit.cover,
                     ),
                     const SizedBox(height: 10),
