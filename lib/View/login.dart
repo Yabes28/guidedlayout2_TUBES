@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:guidedlayout2_1748/View/home.dart';
+import 'package:guidedlayout2_1748/Home/home.dart';
 import 'package:guidedlayout2_1748/View/register.dart';
 import 'package:guidedlayout2_1748/component/form_component.dart';
 
