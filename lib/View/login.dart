@@ -1,8 +1,11 @@
+import 'dart:convert'; // Untuk parsing JSON
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:guidedlayout2_1748/Home/home.dart';
 import 'package:guidedlayout2_1748/View/register.dart';
 import 'package:guidedlayout2_1748/component/form_component.dart';
+import 'package:http/http.dart' as http; // Untuk integrasi API
+import 'package:guidedlayout2_1748/network/api.dart';
 
 class LoginView extends StatefulWidget {
   final Map? data;
@@ -29,10 +32,54 @@ class _LoginViewState extends State<LoginView> {
     dataForm = widget.data;
   }
 
+  // Fungsi untuk login ke API Laravel
+  Future<void> login() async {
+    final url = Uri.parse('http://10.0.2.2:8000/api/login'); // Endpoint login Laravel
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'}, // Header untuk JSON
+        body: jsonEncode({
+          'username' : usernameController.text,
+          'email': emailController.text, // Kirim data email
+          'password': passwordController.text, // Kirim data password
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body); // Parsing respons JSON
+        final token = data['token']; // Ambil token autentikasi
+        debugPrint('Login Successful: Token - $token'); // Debug token
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const HomeView()), // Navigasi ke halaman Home
+        );
+      } else {
+        // Tampilkan dialog error jika login gagal
+        showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: const Text('Login Failed'),
+            content: const Text('Invalid email or password'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint("Error: $e"); // Debug error koneksi
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // Background aplikasi
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -115,7 +162,6 @@ class _LoginViewState extends State<LoginView> {
                           alignment: Alignment.center,
                           child: TextButton(
                             onPressed: () {
-                              // TODO: Tambahkan fungsi "Lupa Password"
                               debugPrint("Forgot Password Clicked");
                             },
                             child: const Text(
@@ -224,7 +270,6 @@ class _LoginViewState extends State<LoginView> {
                 // Link Register
                 TextButton(
                   onPressed: () {
-                    // TODO: Navigasi ke halaman Register
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (_) => const RegisterView()),

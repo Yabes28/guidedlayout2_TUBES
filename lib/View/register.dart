@@ -1,5 +1,7 @@
+import 'dart:convert'; // Untuk parsing JSON
 import 'package:flutter/material.dart';
-import 'package:guidedlayout2_1748/View/login.dart';
+import 'package:http/http.dart' as http; // Untuk integrasi API
+import 'package:guidedlayout2_1748/View/login.dart'; // Navigasi ke halaman Login
 
 class RegisterView extends StatefulWidget {
   const RegisterView({Key? key}) : super(key: key);
@@ -9,25 +11,72 @@ class RegisterView extends StatefulWidget {
 }
 
 class _RegisterViewState extends State<RegisterView> {
-  final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>(); // Key untuk validasi form
   TextEditingController usernameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController weightController = TextEditingController();
   TextEditingController heightController = TextEditingController();
+  String _gender = "laki-laki"; // Gender default sesuai validasi Laravel
 
-  String _gender = "Male"; // Default gender
+  // Fungsi untuk register ke API Laravel
+  Future<void> register() async {
+    final url = Uri.parse('http://10.0.2.2:8000/api/register'); // Endpoint register Laravel
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'}, // Header untuk JSON
+        body: jsonEncode({
+          'username': usernameController.text, // Kirim username
+          'email': emailController.text, // Kirim email
+          'password': passwordController.text, // Kirim password
+          'password_confirmation': passwordController.text, // Konfirmasi password
+          'berat': weightController.text, // Kirim berat badan
+          'tinggi': heightController.text, // Kirim tinggi badan
+          'gender': _gender, // Kirim gender
+        }),
+      );
+
+      if (response.statusCode == 201) {
+        // Jika registrasi berhasil, tampilkan dialog sukses
+        showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: const Text('Registration Successful'),
+            content: const Text('Please login to continue'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const LoginView()),
+                  );
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      } else {
+        // Jika registrasi gagal, tampilkan pesan error
+        final error = jsonDecode(response.body)['message']; // Parsing pesan error
+        debugPrint("Registration Error: $error"); // Debug pesan error
+      }
+    } catch (e) {
+      debugPrint("Error: $e"); // Debug error koneksi
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.white, // Warna latar belakang
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
             child: Column(
               children: [
-                // Header
+                // Header teks
                 const Text(
                   'Hey there,',
                   style: TextStyle(
@@ -64,10 +113,10 @@ class _RegisterViewState extends State<RegisterView> {
                     ],
                   ),
                   child: Form(
-                    key: _formKey,
+                    key: _formKey, // Menghubungkan form ke validasi
                     child: Column(
                       children: [
-                        // Username Input
+                        // Input Username
                         _buildInputField(
                           hint: "User",
                           icon: Icons.person,
@@ -81,7 +130,7 @@ class _RegisterViewState extends State<RegisterView> {
                         ),
                         const SizedBox(height: 15),
 
-                        // Email Input
+                        // Input Email
                         _buildInputField(
                           hint: "Email",
                           icon: Icons.email,
@@ -95,7 +144,7 @@ class _RegisterViewState extends State<RegisterView> {
                         ),
                         const SizedBox(height: 15),
 
-                        // Password Input
+                        // Input Password
                         _buildInputField(
                           hint: "Password",
                           icon: Icons.lock,
@@ -110,61 +159,45 @@ class _RegisterViewState extends State<RegisterView> {
                         ),
                         const SizedBox(height: 15),
 
-                        // Weight Input with KG
-                        Row(
-                          children: [
-                            Expanded(
-                              child: _buildInputField(
-                                hint: "Your Weight",
-                                icon: Icons.monitor_weight,
-                                controller: weightController,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Weight cannot be empty';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            _buildUnitBox("KG", const Color(0xFFF06292)),
-                          ],
+                        // Input Berat
+                        _buildInputField(
+                          hint: "Your Weight (KG)",
+                          icon: Icons.monitor_weight,
+                          controller: weightController,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Weight cannot be empty';
+                            }
+                            return null;
+                          },
                         ),
                         const SizedBox(height: 15),
 
-                        // Height Input with CM
-                        Row(
-                          children: [
-                            Expanded(
-                              child: _buildInputField(
-                                hint: "Your Height",
-                                icon: Icons.height,
-                                controller: heightController,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Height cannot be empty';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            _buildUnitBox("CM", const Color(0xFFBA68C8)),
-                          ],
+                        // Input Tinggi
+                        _buildInputField(
+                          hint: "Your Height (CM)",
+                          icon: Icons.height,
+                          controller: heightController,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Height cannot be empty';
+                            }
+                            return null;
+                          },
                         ),
                         const SizedBox(height: 15),
 
-                        // Gender Selector
+                        // Pilihan Gender
                         Row(
                           children: [
-                            _buildGenderRadio("Male"),
+                            _buildGenderRadio("laki-laki"),
                             const SizedBox(width: 10),
-                            _buildGenderRadio("Female"),
+                            _buildGenderRadio("perempuan"),
                           ],
                         ),
                         const SizedBox(height: 20),
 
-                        // Register Button
+                        // Tombol Register
                         ElevatedButton(
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
@@ -210,23 +243,6 @@ class _RegisterViewState extends State<RegisterView> {
                 ),
                 const SizedBox(height: 25),
 
-                // Or Divider
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Expanded(child: Divider(color: Colors.grey)),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text(
-                        "Or",
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                    ),
-                    Expanded(child: Divider(color: Colors.grey)),
-                  ],
-                ),
-                const SizedBox(height: 15),
-
                 // Login Link
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -234,11 +250,10 @@ class _RegisterViewState extends State<RegisterView> {
                     const Text("Already have an account? "),
                     TextButton(
                       onPressed: () {
-                        // TODO: Navigate to Login Page
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (_) => LoginView()),
-                          );
+                          MaterialPageRoute(builder: (_) => const LoginView()),
+                        );
                       },
                       child: const Text(
                         'Login',
@@ -258,7 +273,7 @@ class _RegisterViewState extends State<RegisterView> {
     );
   }
 
-  // Helper for input fields
+  // Helper untuk membuat input field
   Widget _buildInputField({
     required String hint,
     required IconData icon,
@@ -282,25 +297,7 @@ class _RegisterViewState extends State<RegisterView> {
     );
   }
 
-  // Helper for unit boxes (KG, CM)
-  Widget _buildUnitBox(String text, Color color) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 15),
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Text(
-        text,
-        style: const TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
-
-  // Helper for gender radio buttons
+  // Helper untuk pilihan gender
   Widget _buildGenderRadio(String gender) {
     return Row(
       children: [

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:guidedlayout2_1748/View/welcome.dart';
 
 void main() {
-  runApp(const MainApp());
+  runApp(ProviderScope(child: const MyApp()));
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context){
